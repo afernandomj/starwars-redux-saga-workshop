@@ -1,25 +1,49 @@
-import logo from './logo.svg';
+import { useState } from 'react';
+import { connect } from 'react-redux';
+import { fetchStarWarsRequest, confirmFetchRequest } from './actions';
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const mapStateToProps = ({ starWars }) => ({ starWars });
+
+const mapDispatchToProps = (dispatch) => ({
+	fetchStarWarsRequest: () => dispatch(fetchStarWarsRequest()),
+	confirmFetchRequest: () => dispatch(confirmFetchRequest()),
+});
+
+function App(props) {
+	const [modal, setModal] = useState(false);
+
+	const handleFetchClick = () => {
+		props.fetchStarWarsRequest();
+		setModal(true);
+	};
+
+	const handleClickConfirmation = () => {
+		props.confirmFetchRequest();
+		setModal(false);
+	};
+
+	return (
+		<div>
+			<h2>Hello Redux Saga</h2>
+			<div>
+				{props.starWars.people.map((person, i) => (
+					<h4 key={i}>{person.name}</h4>
+				))}
+			</div>
+			<div>
+				<div
+					style={!modal ? { display: 'none' } : {}}
+					className='modal'
+				>
+					<button onClick={handleClickConfirmation}>Confirm</button>
+				</div>
+			</div>
+			<button onClick={handleFetchClick}>Load more</button>
+		</div>
+	);
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+

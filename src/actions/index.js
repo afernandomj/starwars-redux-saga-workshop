@@ -1,6 +1,7 @@
 import {
 	actionChannel,
 	call,
+	cancel,
 	fork,
 	put,
 	select,
@@ -39,9 +40,9 @@ export const fetchSartWarsPlanetsRequest = () => ({
 
 export function* fetchPerson(action) {
 	try {
-		console.log('entered to fetch person...');
-		yield take(actions.CONFIRMATION);
-		console.log('passed confirmation...');
+		// console.log('entered to fetch person...');
+		// yield take(actions.CONFIRMATION);
+		// console.log('passed confirmation...');
 
 		// yield fork(api, 'http://dog.ceo/api/breeds/list/alls');
 		// fork is the same thing as call, but it doesn't block the others effects
@@ -85,3 +86,10 @@ export function* takeOneAtMost() {
 		});
 	}
 }
+
+export function* forkedFetchPerson() {
+	const syncPerson = yield fork(fetchPerson);
+	yield take('STOP_BACKGROUND_FETCH');
+	yield cancel(syncPerson);
+}
+

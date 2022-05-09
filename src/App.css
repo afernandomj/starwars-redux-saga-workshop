@@ -9,3 +9,13 @@
   border-radius: 10px;
   top: 140px;
 }
+
+button {
+  margin: 10px 0 0 0;
+  display: block;
+}
+
+div div {
+  display: inline-block;
+  margin: 0 50px 0 0;
+}

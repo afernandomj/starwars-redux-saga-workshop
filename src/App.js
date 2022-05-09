@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
-import { fetchStarWarsRequest, confirmFetchRequest } from './actions';
+import {
+	fetchStarWarsRequest,
+	confirmFetchRequest,
+	fetchSartWarsPlanetsRequest,
+} from './actions';
 
 import './App.css';
 
@@ -9,6 +13,7 @@ const mapStateToProps = ({ starWars }) => ({ starWars });
 const mapDispatchToProps = (dispatch) => ({
 	fetchStarWarsRequest: () => dispatch(fetchStarWarsRequest()),
 	confirmFetchRequest: () => dispatch(confirmFetchRequest()),
+	fetchSartWarsPlanetsRequest: () => dispatch(fetchSartWarsPlanetsRequest()),
 });
 
 function App(props) {
@@ -33,6 +38,11 @@ function App(props) {
 				))}
 			</div>
 			<div>
+				{props.starWars.planets.map((planet, i) => (
+					<h4 key={i}>{planet.name}</h4>
+				))}
+			</div>
+			<div>
 				<div
 					style={!modal ? { display: 'none' } : {}}
 					className='modal'
@@ -40,7 +50,10 @@ function App(props) {
 					<button onClick={handleClickConfirmation}>Confirm</button>
 				</div>
 			</div>
-			<button onClick={handleFetchClick}>Load more</button>
+			<button onClick={handleFetchClick}>Load People</button>
+			<button onClick={props.fetchSartWarsPlanetsRequest}>
+				Load Planets
+			</button>
 		</div>
 	);
 }

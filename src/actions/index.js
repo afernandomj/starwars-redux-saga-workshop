@@ -1,4 +1,12 @@
-import { call, fork, put, select, take, throttle } from 'redux-saga/effects';
+import {
+	actionChannel,
+	call,
+	fork,
+	put,
+	select,
+	take,
+	throttle,
+} from 'redux-saga/effects';
 import * as actions from './types';
 
 export const api = (url) => fetch(url).then((res) => res.json());
@@ -9,6 +17,10 @@ export const fetchStarWarsRequest = () => ({
 
 export const confirmFetchRequest = () => ({
 	type: actions.CONFIRMATION,
+});
+
+export const queueChannelRequests = () => ({
+	type: actions.QUEUE_CHANNEL_REQUESTS,
 });
 
 /*
@@ -61,3 +73,15 @@ export function* fetchPlanets(action) {
 	}
 }
 
+export function* takeOneAtMost() {
+	const chan = yield actionChannel(actions.QUEUE_CHANNEL_REQUESTS);
+
+	for (let i = 1; i >= 1; i++) {
+		yield take(chan);
+		yield call(api, 'https://swapi.dev/api/people/');
+		yield put({
+			type: actions.FETCH_STAR_WARS_SUCCESS,
+			data: i,
+		});
+	}
+}
